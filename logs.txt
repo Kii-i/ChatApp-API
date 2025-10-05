@@ -1,0 +1,21 @@
+setup docker for nodejs, postgres and redis
+
+implement auth system
+    first you signup
+    it creates refresh and access
+    stores access and refresh inside cookie
+    additionally stored refresh inside redis 
+
+/refresh 
+    whenever accessToken expires
+    client sends request at /auth/request
+    where refresh function
+        =>  takes refreshToken from cookie
+            verifies it 
+            extracts userId from payload
+            function also extracts refresh from redis
+            compares both 
+            now if true 
+                => generates accessToken and refreshToken
+                    stores both in cookie 
+                    and also overwrites refresh from redis to new refresh

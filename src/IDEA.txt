@@ -1,0 +1,6 @@
+DON'T FORGET TO INDEX !! 
+\l => list all database
+\c => connect to database
+\dt => list all tables in database
+-U => username
+-d => database name

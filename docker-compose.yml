@@ -1,0 +1,32 @@
+services:
+  nodejs:
+    build: .
+    ports:
+      - 3000:3000
+    env_file:
+      - ./.env.docker
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    restart: always
+    env_file:
+      - ./.env.docker
+
+  redis:
+    image: redis
+    volumes:
+      - redis-data:/data
+      - ./redis/redis.config:/usr/local/etc/redis/redis.conf:ro
+    ports:
+      - 6379:6379
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-data:

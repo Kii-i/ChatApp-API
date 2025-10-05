@@ -1,0 +1,172 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+}
+
+enum MessageMethod {
+  DIRECT_MESSAGE
+  CHANNEL_MESSAGE
+}
+
+model User {
+  id              String         @id @default(uuid())
+  username        String         @unique @db.VarChar(30)
+  email           String         @unique @db.VarChar(30)
+  password        String
+  avatarUrl       String?        @map("avatar_url")
+  role            UserRole       @default(USER)
+  tokenVersion    Int            @default(0) @map("token_version")
+  serverOwned     Server[]
+  serverJoined    UserOnServer[]
+  friends         Friend[]       @relation("userFriend")
+  friendOf        Friend[]       @relation("friendOf")
+  messagesSent    Message[]      @relation("sender")
+  messageReceived Message[]      @relation("receiver")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  deletedAt       DateTime?      @map("deleted_at")
+
+  @@map("users")
+}
+
+model Server {
+  id          String         @id @default(uuid())
+  user        User           @relation(fields: [ownerId], references: [id])
+  ownerId     String         @map("owner_id")
+  title       String         @db.VarChar(120)
+  avatarUrl   String?        @map("avatar_url")
+  members     UserOnServer[]
+  serverRoles ServerRole[]
+  channels    Channel[]
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+  deletedAt   DateTime?      @map("deleted_at")
+
+  @@map("servers")
+}
+
+// result of many to many relation between server and user
+model UserOnServer {
+  user     User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String              @map("user_id")
+  server   Server              @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  serverId String              @map("server_id")
+  role     UserRolesOnServer[]
+  joinedAt DateTime            @default(now()) @map("joined_at")
+
+  @@id([userId, serverId])
+  @@map("user_on_server")
+}
+
+model ServerRole {
+  id                  String              @id @default(uuid())
+  server              Server              @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  serverId            String              @map("server_id")
+  associatedUser      UserRolesOnServer[]
+  title               String
+  createdAt           DateTime            @default(now()) @map("created_at")
+  channelAccessRole   ChannelAccessRole?  @relation(fields: [channelAccessRoleId], references: [id])
+  channelAccessRoleId String?
+
+  @@map("server_role")
+}
+
+// result of many to many relation between serverRole and userOnServer
+model UserRolesOnServer {
+  userOnServer UserOnServer @relation(fields: [userId, serverId], references: [userId, serverId], onDelete: Cascade)
+  userId       String
+  serverId     String       @map("server_id")
+  serverRole   ServerRole   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId       String       @map("role_id")
+
+  @@id([userId, serverId, roleId])
+  @@map("user_roles_on_server")
+}
+
+model Friend {
+  id        String       @id @default(uuid())
+  user      User         @relation(fields: [userId], references: [id], name: "userFriend", onDelete: Cascade)
+  userId    String       @map("user_id")
+  friend    User         @relation(fields: [friendId], references: [id], name: "friendOf", onDelete: Cascade)
+  friendId  String       @map("friend_id")
+  status    FriendStatus @default(PENDING)
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  @@unique([userId, friendId])
+  @@map("friends")
+}
+
+model Channel {
+  id              String              @id @default(uuid())
+  server          Server              @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  serverId        String              @map("server_id")
+  title           String              @db.VarChar(120)
+  category        Category            @relation(fields: [categoryId], references: [id])
+  order           Int
+  channelAccessBy ChannelAccessRole[]
+  messages        Message[]
+  categoryId      String              @map("category_id")
+  createdAt       DateTime            @default(now()) @map("created_at")
+}
+
+model Category {
+  id      String    @id @default(uuid())
+  channel Channel[]
+  title   String    @db.VarChar(60)
+  order   Int
+
+  @@map("categories")
+}
+
+model ChannelAccessRole {
+  id           String       @id @default(uuid())
+  channel      Channel      @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId    String       @map("channel_id")
+  requiredRole ServerRole[]
+
+  @@map("channel_access_role")
+}
+
+model Message {
+  id          String        @id @default(uuid())
+  user        User          @relation(fields: [userId], references: [id], name: "sender", onDelete: Cascade)
+  userId      String
+  channel     Channel?      @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId   String?       @map("channel_id")
+  type        MessageType
+  method      MessageMethod
+  content     String?       @db.VarChar(800)
+  imageUrl    String?       @map("image_url")
+  recipient   User?         @relation(fields: [recipientId], references: [id], name: "receiver", onDelete: Cascade)
+  recipientId String?       @map("recipient_id")
+  createdAt   DateTime      @default(now()) @map("created_at")
+
+  @@map("message")
+}

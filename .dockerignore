@@ -1,0 +1,8 @@
+docker-compose*
+dockerfile
+.env
+.env.docker
+.dockerignore
+node_modules/
+nodemon.json
+dist/
