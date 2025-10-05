@@ -68,6 +68,7 @@ model Server {
   createdAt   DateTime       @default(now()) @map("created_at")
   updatedAt   DateTime       @updatedAt @map("updated_at")
   deletedAt   DateTime?      @map("deleted_at")
+  categories  Category[]
 
   @@map("servers")
 }
@@ -137,10 +138,12 @@ model Channel {
 }
 
 model Category {
-  id      String    @id @default(uuid())
-  channel Channel[]
-  title   String    @db.VarChar(60)
-  order   Int
+  id       String    @id @default(uuid())
+  channel  Channel[]
+  title    String    @db.VarChar(60)
+  order    Int
+  Server   Server    @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  serverId String
 
   @@map("categories")
 }
