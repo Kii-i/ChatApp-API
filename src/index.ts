@@ -7,21 +7,23 @@ import AuthRouter from "./routes/auth.routes";
 import UserRouter from "./routes/user.routes";
 import ServerRouter from "./routes/server.route";
 import FriendRouter from "./routes/friend.routes";
+import CategoryRouter from "./routes/category.route";
 const app = express();
 
 import { PrismaClient } from "@prisma/client";
-import customErrorHandler from "./middlewares/customErrorHandler.middleware";
-import authentication from "./middlewares/authentication.middleware";
+import CustomErrorHandler from "./middlewares/CustomErrorHandler.middleware";
+import Authentication from "./middlewares/Authentication.middleware";
 export const prisma = new PrismaClient();
 
 app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", AuthRouter);
-app.use("/api/user", authentication, UserRouter);
-app.use("/api/server", authentication, ServerRouter);
-app.use("/api/user", authentication, FriendRouter);
-app.use(customErrorHandler);
+app.use("/api/users", Authentication, UserRouter);
+app.use("/api/servers", Authentication, ServerRouter);
+app.use("/api/users", Authentication, FriendRouter);
+app.use("/api/servers/:serverId/categories", Authentication, CategoryRouter);
+app.use(CustomErrorHandler);
 const PORT = Number(process.env.PORT) || 3000;
 //so by default the ip address is 127.0.0.1 => local machine so it will only listen
 //on local machine by changing it to 0000 it can listen to all ip on local machine or on mobile or docker container

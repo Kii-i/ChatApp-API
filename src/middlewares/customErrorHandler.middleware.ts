@@ -2,7 +2,7 @@ import { ErrorRequestHandler } from "express";
 import ApiError from "../errors/ApiError.error";
 import z from "zod";
 import { StatusCodes } from "http-status-codes";
-const customErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
+const CustomErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof z.ZodError) {
     res.status(StatusCodes.FORBIDDEN).json({ err });
     return;
@@ -16,4 +16,4 @@ const customErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     .json({ err: err instanceof Error ? err.message : err });
 };
 
-export default customErrorHandler;
+export default CustomErrorHandler;

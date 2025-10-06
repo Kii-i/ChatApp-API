@@ -8,8 +8,8 @@ import {
 } from "../controllers/friends.controller";
 const router = express.Router();
 router.route("/friends").get(listFriends);
-router.route("/friend/requests").get(listRequests);
-router.route("/friend/:friendId/request").post(sendFriendReq);
-router.route("/friend/request/:requestId").post(acceptOrRejectReq);
-router.route("/friend/:friendId/remove").post(removeFriend);
+router.route("/friends/requests").get(listRequests);
+router.route("/friends/:friendId/requests").post(sendFriendReq);
+router.route("/friends/requests/:requestId").post(acceptOrRejectReq);
+router.route("/friends/:friendId/remove").post(removeFriend);
 export default router;

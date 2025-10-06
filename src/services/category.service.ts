@@ -8,12 +8,15 @@ import {
   UpdateCategoryType,
 } from "../types/category.types";
 import checkCategory from "../utils/checkCategory";
+import checkOwner from "../utils/checkOwner";
 import checkServer from "../utils/checkServer";
 
 export const createCategoryHandler: CreateCategoryType = async (
-  serverId,
+  requestData,
   title
 ) => {
+  const { serverId, userId } = requestData;
+  await checkOwner(userId, serverId);
   await checkServer(serverId);
   const lastCategory = await prisma.category.findFirst({
     where: {
@@ -36,7 +39,8 @@ export const updateCategoryHandler: UpdateCategoryType = async (
   requestData,
   title
 ) => {
-  const { serverId, categoryId } = requestData;
+  const { serverId, categoryId, userId } = requestData;
+  await checkOwner(userId, serverId);
   await checkServer(serverId);
   await checkCategory(categoryId, serverId);
   return await prisma.category.update({
@@ -51,7 +55,8 @@ export const updateCategoryHandler: UpdateCategoryType = async (
 export const deleteCategoryHandler: DeleteCategoryType = async (
   requestData
 ) => {
-  const { serverId, categoryId } = requestData;
+  const { serverId, categoryId, userId } = requestData;
+  await checkOwner(userId, serverId);
   await checkServer(serverId);
   await checkCategory(categoryId, serverId);
   await prisma.category.delete({
@@ -72,9 +77,11 @@ export const getAllCategoryHandler: GetAllCategoryType = async (serverId) => {
   });
 };
 export const updateCategoryOrderHandler: UpdateCategoryOrderType = async (
-  serverId,
+  requestData,
   data
 ) => {
+  const { serverId, userId } = requestData;
+  await checkOwner(userId, serverId);
   const { movedCategoryId, newOrder } = data;
   await checkServer(serverId);
   const categories = await prisma.category.findMany({

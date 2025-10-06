@@ -142,7 +142,7 @@ model Category {
   channel  Channel[]
   title    String    @db.VarChar(60)
   order    Int
-  Server   Server    @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  server   Server    @relation(fields: [serverId], references: [id], onDelete: Cascade)
   serverId String
 
   @@map("categories")

@@ -3,7 +3,7 @@ import AuthError from "../errors/AuthError.error";
 import { AccessTokenPayload, verifyToken } from "../utils/jwt";
 import checkUser from "../utils/checkUser";
 
-const authentication: RequestHandler = async (req, res, next) => {
+const Authentication: RequestHandler = async (req, res, next) => {
   const accessToken = req.cookies.accessToken as string | undefined;
   if (!accessToken) throw new AuthError("Access denied");
   const { payload, error } = verifyToken<AccessTokenPayload>(accessToken);
@@ -18,4 +18,4 @@ const authentication: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
-export default authentication;
+export default Authentication;
