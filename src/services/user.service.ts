@@ -3,11 +3,11 @@ import { BASE_URL } from "../constants/getEnv";
 import BadRequestError from "../errors/badRequest.error";
 import {
   MyProfileType,
-  sendVerificationLinkType,
+  SendVerificationLinkType,
   UpdateEmailType,
   UpdatePasswordType,
   UpdateProfileType,
-  verifyLinkType,
+  VerifyLinkType,
 } from "../types/user.types";
 import { comparePassword, hashPassword } from "../utils/bcrypt";
 import checkUser from "../utils/checkUser";
@@ -62,7 +62,7 @@ export const updatePasswordHandler: UpdatePasswordType = async (
 };
 
 // send verification link
-export const sendVerificationLinkHandler: sendVerificationLinkType = async (
+export const sendVerificationLinkHandler: SendVerificationLinkType = async (
   userId
 ) => {
   const user = await checkUser({ id: userId });
@@ -79,14 +79,14 @@ export const sendVerificationLinkHandler: sendVerificationLinkType = async (
   await storeVerificationLink(verifyLinkId, userId);
 };
 // verify link
-export const verifyLinkHandler: verifyLinkType = async (userId, token) => {
+export const verifyLinkHandler: VerifyLinkType = async (userId, token) => {
   if (!token) throw new AuthError("Verify link expired or invalid");
   const value = await getSpecificRedisVerifyField(userId, "verifyLinkId");
   if (value !== token) throw new AuthError("Verify link expired or invalid");
   await setVerifyTrue(userId);
 };
 // this logic updates email then remove verification link
-export const updateEmailHandler: UpdateEmailType = async (userId, data) => {
+export const updateEmailHandler: UpdateEmailType = async (userId, email) => {
   const isVerify = await getSpecificRedisVerifyField(userId, "verified");
   if (!isVerify || isVerify === "false")
     throw new AuthError("Verify link expired or invalid");
@@ -96,7 +96,7 @@ export const updateEmailHandler: UpdateEmailType = async (userId, data) => {
       id: userId,
     },
     data: {
-      email: data.email,
+      email,
     },
   });
   await removeVerificationLink(userId);

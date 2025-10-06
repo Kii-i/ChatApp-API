@@ -48,7 +48,7 @@ export const verifyLink = catchError(async (req, res) => {
 });
 export const updateEmail = catchError(async (req, res) => {
   const userId = req.user.id;
-  const parsedData = EmailSchema.parse({ ...req.body });
-  await updateEmailHandler(userId, parsedData);
+  const { email } = EmailSchema.parse({ ...req.body });
+  await updateEmailHandler(userId, email);
   res.status(StatusCodes.OK).json({ success: true });
 });

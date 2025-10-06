@@ -11,7 +11,7 @@ const app = express();
 
 import { PrismaClient } from "@prisma/client";
 import customErrorHandler from "./middlewares/customErrorHandler.middleware";
-import authentication from "./middlewares/authentication.Error";
+import authentication from "./middlewares/authentication.middleware";
 export const prisma = new PrismaClient();
 
 app.use(express.json());

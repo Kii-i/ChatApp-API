@@ -2,13 +2,13 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "..";
 import BadRequestError from "../errors/badRequest.error";
 import {
-  createServerType,
-  deleteServerType,
+  CreateServerType,
+  DeleteServerType,
   GetServerType,
-  joinServerType,
-  leaveServerType,
-  listServerOwnedType,
-  updateServerType,
+  JoinServerType,
+  LeaveServerType,
+  ListServerOwnedType,
+  UpdateServerType,
 } from "../types/server.types";
 import checkUser from "../utils/checkUser";
 import checkServerWithUser from "../utils/checkServerWithUser";
@@ -16,7 +16,7 @@ import checkServer from "../utils/checkServer";
 import checkUserInServer from "../utils/checkUserInServer";
 
 // create server
-export const createServerHandler: createServerType = async (userId, data) => {
+export const createServerHandler: CreateServerType = async (userId, data) => {
   await checkUser({ id: userId });
   const { title, avatarUrl } = data;
   return await prisma.$transaction(async (tx) => {
@@ -57,7 +57,7 @@ export const createServerHandler: createServerType = async (userId, data) => {
 };
 
 // update server
-export const updateServerHandler: updateServerType = async (
+export const updateServerHandler: UpdateServerType = async (
   requestData,
   data
 ) => {
@@ -91,7 +91,7 @@ export const membersOnServerHandler = async (serverId: string) => {
     },
   });
 };
-export const listServerOwnedHandler: listServerOwnedType = async (userId) => {
+export const listServerOwnedHandler: ListServerOwnedType = async (userId) => {
   await checkUser({ id: userId });
   return await prisma.server.findMany({
     where: {
@@ -111,7 +111,7 @@ export const listServerJoinedHandler = async (userId: string) => {
     },
   });
 };
-export const joinServerHandler: joinServerType = async (requestData) => {
+export const joinServerHandler: JoinServerType = async (requestData) => {
   const { serverId, userId } = requestData;
   await checkUser({ id: userId });
   await checkServer(serverId);
@@ -125,7 +125,7 @@ export const joinServerHandler: joinServerType = async (requestData) => {
     },
   });
 };
-export const leaveServerHandler: leaveServerType = async (
+export const leaveServerHandler: LeaveServerType = async (
   requestData,
   newOwnerId
 ) => {
@@ -189,7 +189,7 @@ export const leaveServerHandler: leaveServerType = async (
     }
   });
 };
-export const deleteServerHandler: deleteServerType = async (requestData) => {
+export const deleteServerHandler: DeleteServerType = async (requestData) => {
   const { serverId, userId } = requestData;
   await checkUser({ id: userId });
   await checkServerWithUser(serverId, userId);

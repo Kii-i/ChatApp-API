@@ -2,39 +2,38 @@ import { Prisma, Server } from "@prisma/client";
 import z from "zod";
 import {
   CreateServerSchema,
-  leaveServerSchema,
   UpdateServerSchema,
 } from "../zodSchema/server.schema";
 
-type requestData = {
+type RequestData = {
   serverId: string;
   userId: string;
 };
 type CreateServerData = z.infer<typeof CreateServerSchema>;
-export type createServerType = (
+export type CreateServerType = (
   userId: string,
   data: CreateServerData
 ) => Promise<Server>;
 
 type UpdateServerData = z.infer<typeof UpdateServerSchema>;
-export type updateServerType = (
-  requestData: requestData,
+export type UpdateServerType = (
+  requestData: RequestData,
   data: UpdateServerData
 ) => Promise<Server>;
 
 export type GetServerType = <T extends Prisma.ServerInclude | undefined>(
-  requestData: requestData,
+  requestData: RequestData,
   include?: T
 ) => Promise<
   T extends Prisma.ServerInclude
     ? Prisma.ServerGetPayload<{ include: T }>
     : Server
 >;
-export type listServerOwnedType = (userId: string) => Promise<Server[]>;
+export type ListServerOwnedType = (userId: string) => Promise<Server[]>;
+export type JoinServerType = (requestData: RequestData) => Promise<void>;
 
-export type joinServerType = (requestData: requestData) => Promise<void>;
-export type leaveServerType = (
-  requestData: requestData,
+export type LeaveServerType = (
+  requestData: RequestData,
   newOwnerId?: string
 ) => Promise<void>;
-export type deleteServerType = (requestData: requestData) => Promise<void>;
+export type DeleteServerType = (requestData: RequestData) => Promise<void>;

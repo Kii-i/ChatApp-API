@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import catchError from "../utils/catchError";
 import {
   CreateServerSchema,
-  leaveServerSchema,
+  LeaveServerSchema,
   UpdateServerSchema,
 } from "../zodSchema/server.schema";
 import {
@@ -73,8 +73,8 @@ export const leaveServer = catchError(async (req, res) => {
     userId: req.user.id,
     serverId: String(req.params.serverId),
   };
-  const parsedData = leaveServerSchema.parse({ ...req.body });
-  await leaveServerHandler(requestData, parsedData.newOwnerId);
+  const { newOwnerId } = LeaveServerSchema.parse({ ...req.body });
+  await leaveServerHandler(requestData, newOwnerId);
   res.status(StatusCodes.OK).json({ success: true });
 });
 export const deleteServer = catchError(async (req, res) => {

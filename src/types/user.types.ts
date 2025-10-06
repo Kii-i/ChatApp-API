@@ -1,7 +1,6 @@
 import z from "zod";
 import SafeUser from "../constants/SafeUser";
 import {
-  EmailSchema,
   UpdatePasswordSchema,
   UpdateProfileSchema,
 } from "../zodSchema/user.schema";
@@ -22,12 +21,8 @@ export type UpdatePasswordType = (
 
 export type LogoutAllType = (userId: string) => Promise<void>;
 
-type UpdateEmailData = z.infer<typeof EmailSchema>;
-export type UpdateEmailType = (
-  userId: string,
-  data: UpdateEmailData
-) => Promise<void>;
+export type UpdateEmailType = (userId: string, email: string) => Promise<void>;
 
-export type sendVerificationLinkType = (userId: string) => Promise<void>;
+export type SendVerificationLinkType = (userId: string) => Promise<void>;
 
-export type verifyLinkType = (userId: string, token: string) => Promise<void>;
+export type VerifyLinkType = (userId: string, token: string) => Promise<void>;

@@ -9,7 +9,7 @@ import {
   sendOtp,
   verifyOtp,
 } from "../controllers/auth.controller";
-import authentication from "../middlewares/authentication.Error";
+import authentication from "../middlewares/authentication.middleware";
 const router = express.Router();
 router.route("/register").post(register);
 router.route("/login").post(login);
