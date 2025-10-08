@@ -6,8 +6,10 @@ import express from "express";
 import AuthRouter from "./routes/auth.routes";
 import UserRouter from "./routes/user.routes";
 import ServerRouter from "./routes/server.route";
-import FriendRouter from "./routes/friend.routes";
+import FriendRouter from "./routes/friend.route";
 import CategoryRouter from "./routes/category.route";
+import ChannelRouter from "./routes/channel.route";
+import ChannelAccessRouter from "./routes/channelAccess.route";
 const app = express();
 
 import { PrismaClient } from "@prisma/client";
@@ -21,8 +23,17 @@ app.use(cookieParser());
 app.use("/api/auth", AuthRouter);
 app.use("/api/users", Authentication, UserRouter);
 app.use("/api/servers", Authentication, ServerRouter);
-app.use("/api/users", Authentication, FriendRouter);
-app.use("/api/servers/:serverId/categories", Authentication, CategoryRouter);
+app.use("/api/users/friends", Authentication, FriendRouter);
+app.use(
+  "/api/servers/:serverId/categories/:categoryId/channel",
+  Authentication,
+  CategoryRouter
+);
+app.use(
+  "/api/servers/:serverId/categories/:categoryId/channelAccess",
+  Authentication,
+  CategoryRouter
+);
 app.use(CustomErrorHandler);
 const PORT = Number(process.env.PORT) || 3000;
 //so by default the ip address is 127.0.0.1 => local machine so it will only listen
