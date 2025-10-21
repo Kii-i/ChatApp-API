@@ -10,6 +10,7 @@ import FriendRouter from "./routes/friend.route";
 import CategoryRouter from "./routes/category.route";
 import ChannelRouter from "./routes/channel.route";
 import ChannelAccessRouter from "./routes/channelAccess.route";
+import ServerRoleRouter from "./routes/serverRole.routes";
 const app = express();
 
 import { PrismaClient } from "@prisma/client";
@@ -34,6 +35,7 @@ app.use(
   Authentication,
   CategoryRouter
 );
+app.use("/api/server/:serverId/", Authentication, ServerRoleRouter);
 app.use(CustomErrorHandler);
 const PORT = Number(process.env.PORT) || 3000;
 //so by default the ip address is 127.0.0.1 => local machine so it will only listen
