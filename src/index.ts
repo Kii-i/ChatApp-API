@@ -25,17 +25,14 @@ app.use("/api/auth", AuthRouter);
 app.use("/api/users", Authentication, UserRouter);
 app.use("/api/servers", Authentication, ServerRouter);
 app.use("/api/users/friends", Authentication, FriendRouter);
-app.use(
-  "/api/servers/:serverId/categories/:categoryId/channel",
-  Authentication,
-  CategoryRouter
-);
-app.use(
-  "/api/servers/:serverId/categories/:categoryId/channelAccess",
-  Authentication,
-  CategoryRouter
-);
-app.use("/api/server/:serverId/", Authentication, ServerRoleRouter);
+app.use("/api/servers/:serverId", Authentication, CategoryRouter);
+// app.use(
+//   "/api/servers/:serverId/categories/:categoryId/channelAccess",
+//   Authentication,
+//   CategoryRouter
+// );
+app.use("/api/servers/:serverId", Authentication, ServerRoleRouter);
+app.use("/api/servers/:serverId", Authentication, ChannelRouter);
 app.use(CustomErrorHandler);
 const PORT = Number(process.env.PORT) || 3000;
 //so by default the ip address is 127.0.0.1 => local machine so it will only listen

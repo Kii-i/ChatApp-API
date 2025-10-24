@@ -3,11 +3,13 @@ import {
   createChannel,
   deleteChannel,
   getAllChannels,
+  moveChannel,
   updateChannel,
 } from "../controllers/channel.controller";
 const router = express.Router();
-router.route("/").get(getAllChannels).post(createChannel);
-router.route("/:channelId/update").patch(updateChannel);
-router.route("/:channelId/delete").delete(deleteChannel);
+router.route("/channels").get(getAllChannels);
+router.route("/channels/:channelId").delete(deleteChannel).patch(updateChannel);
+router.route("/categories/:categoryId/channels").post(createChannel);
+router.route("/channels/:channelId/move").patch(moveChannel);
 
 export default router;
