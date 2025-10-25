@@ -22,6 +22,7 @@ export const createCategory = catchError(async (req, res) => {
   const category = await createCategoryHandler(requestData, title);
   res.status(StatusCodes.CREATED).json({ category });
 });
+
 export const updateCategory = catchError(async (req, res) => {
   const requestData = {
     serverId: req.params.serverId,
@@ -32,6 +33,7 @@ export const updateCategory = catchError(async (req, res) => {
   const category = await updateCategoryHandler(requestData, title);
   res.status(StatusCodes.OK).json({ category });
 });
+
 export const deleteCategory = catchError(async (req, res) => {
   const requestData = {
     serverId: req.params.serverId,
@@ -43,11 +45,13 @@ export const deleteCategory = catchError(async (req, res) => {
     message: `Category with the id: ${requestData.categoryId} has been deleted`,
   });
 });
+
 export const getAllCategory = catchError(async (req, res) => {
   const serverId = req.params.serverId;
   const categories = await getAllCategoryHandler(serverId);
   res.status(StatusCodes.OK).json({ categories });
 });
+
 export const updateCategoryOrder = catchError(async (req, res) => {
   const requestData = {
     serverId: req.params.serverId,

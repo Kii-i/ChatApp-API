@@ -8,8 +8,11 @@ import {
 } from "../controllers/category.controller";
 const router = express.Router({ mergeParams: true });
 
-router.route("/").post(createCategory).get(getAllCategory);
-router.route("/order").patch(updateCategoryOrder);
-router.route("/:categoryId").patch(updateCategory).delete(deleteCategory);
+router.route("/categories").post(createCategory).get(getAllCategory);
+router.route("/categories/order").patch(updateCategoryOrder);
+router
+  .route("/categories/:categoryId")
+  .patch(updateCategory)
+  .delete(deleteCategory);
 
 export default router;
