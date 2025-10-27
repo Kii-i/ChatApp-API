@@ -1,13 +1,10 @@
 import { prisma } from "..";
-import BadRequestError from "../errors/badRequest.error";
 import {
   GetChannelRolePermissionsType,
   RemoveChannelRolePermissionType,
   SetChannelRolePermissionType,
 } from "../types/channelAccess.types";
-import catchError from "../utils/catchError";
 import checkChannel from "../utils/checkChannel";
-import checkRole from "../utils/checkRole";
 import checkRoleArray from "../utils/checkRoleArray";
 import checkServer from "../utils/checkServer";
 

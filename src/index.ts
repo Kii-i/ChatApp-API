@@ -26,11 +26,11 @@ app.use("/api/users", Authentication, UserRouter);
 app.use("/api/servers", Authentication, ServerRouter);
 app.use("/api/users/friends", Authentication, FriendRouter);
 app.use("/api/servers/:serverId", Authentication, CategoryRouter);
-// app.use(
-//   "/api/servers/:serverId/categories/:categoryId/channelAccess",
-//   Authentication,
-//   CategoryRouter
-// );
+app.use(
+  "/api/servers/:serverId/channels/:channelId",
+  Authentication,
+  ChannelAccessRouter
+);
 app.use("/api/servers/:serverId", Authentication, ServerRoleRouter);
 app.use("/api/servers/:serverId", Authentication, ChannelRouter);
 app.use(CustomErrorHandler);
