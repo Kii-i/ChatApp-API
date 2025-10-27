@@ -1,17 +1,17 @@
-import { ChannelAccessRole } from "@prisma/client";
+import { ChannelAccessRole, ServerRole } from "@prisma/client";
 type RequestData = {
   serverId: string;
   channelId: string;
-  roleId: string;
-  allowedRoleId: string;
+  channelAccessRoleId: string;
 };
 export type SetChannelRolePermissionType = (
-  requestData: Omit<RequestData, "allowedRole">,
-  role: string[]
-) => Promise<ChannelAccessRole>;
-export type DeleteChannelROlePermissionType = (
-  requestData: Omit<RequestData, "roleId">
+  requestData: Omit<RequestData, "channelAccessRoleId">,
+  roleIds: string[]
+) => Promise<ServerRole[]>;
+export type RemoveChannelRolePermissionType = (
+  requestData: Omit<RequestData, "channelAccessRoleId">,
+  roleIds: string[]
 ) => Promise<void>;
 export type GetChannelRolePermissionsType = (
-  requestData: Pick<RequestData, "serverId" | "channelId">
+  requestData: RequestData
 ) => Promise<ChannelAccessRole[]>;
