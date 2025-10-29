@@ -15,6 +15,7 @@ import {
 
 export const createChannel = catchError(async (req, res) => {
   const requestData = {
+    userId: req.user.id,
     categoryId: req.params.categoryId,
     serverId: req.params.serverId,
   };
@@ -24,14 +25,16 @@ export const createChannel = catchError(async (req, res) => {
 });
 export const deleteChannel = catchError(async (req, res) => {
   const requestData = {
+    userId: req.user.id,
     channelId: req.params.channelId,
     serverId: req.params.serverId,
   };
   await deleteChannelHandler(requestData);
-  res.status(StatusCodes.OK).json("channel deleted");
+  res.status(StatusCodes.OK).json({ message: "channel deleted" });
 });
 export const updateChannel = catchError(async (req, res) => {
   const requestData = {
+    userId: req.user.id,
     channelId: req.params.channelId,
     serverId: req.params.serverId,
   };
@@ -48,6 +51,7 @@ export const getAllChannels = catchError(async (req, res) => {
 });
 export const moveChannel = catchError(async (req, res) => {
   const requestData = {
+    userId: req.user.id,
     channelId: req.params.channelId,
     serverId: req.params.serverId,
   };

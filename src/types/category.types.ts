@@ -17,7 +17,9 @@ export type UpdateCategoryType = (
   title: string
 ) => Promise<Category>;
 export type DeleteCategoryType = (requestData: RequestData) => Promise<void>;
-export type GetAllCategoryType = (serverId: string) => Promise<Category[]>;
+export type GetAllCategoryType = (
+  requestData: Omit<RequestData, "categoryId">
+) => Promise<Category[]>;
 type UpdateCategoryOrderData = z.infer<typeof NewOrderSchema>;
 export type UpdateCategoryOrderType = (
   requestData: Omit<RequestData, "categoryId">,

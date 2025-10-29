@@ -7,7 +7,7 @@ import {
 
 const router = express.Router({ mergeParams: true });
 router
-  .route("/")
+  .route("/access")
   .get(getChannelRolePermissions)
   .post(setChannelRolePermission)
   .delete(deleteChannelRolePermission);

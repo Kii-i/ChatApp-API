@@ -47,8 +47,11 @@ export const deleteCategory = catchError(async (req, res) => {
 });
 
 export const getAllCategory = catchError(async (req, res) => {
-  const serverId = req.params.serverId;
-  const categories = await getAllCategoryHandler(serverId);
+  const requestData = {
+    serverId: req.params.serverId,
+    userId: req.user.id,
+  };
+  const categories = await getAllCategoryHandler(requestData);
   res.status(StatusCodes.OK).json({ categories });
 });
 

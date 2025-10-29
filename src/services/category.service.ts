@@ -65,8 +65,12 @@ export const deleteCategoryHandler: DeleteCategoryType = async (
     },
   });
 };
-export const getAllCategoryHandler: GetAllCategoryType = async (serverId) => {
+export const getAllCategoryHandler: GetAllCategoryType = async (
+  requestData
+) => {
+  const { serverId, userId } = requestData;
   await checkServer(serverId);
+  await checkOwner(userId, serverId);
   return await prisma.category.findMany({
     where: {
       serverId,

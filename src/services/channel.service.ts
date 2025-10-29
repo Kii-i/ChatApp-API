@@ -8,14 +8,16 @@ import {
 } from "../types/channel.types";
 import checkCategory from "../utils/checkCategory";
 import checkChannel from "../utils/checkChannel";
+import checkOwner from "../utils/checkOwner";
 import checkServer from "../utils/checkServer";
 
 export const createChannelHandler: CreateChannelType = async (
   requestData,
   title
 ) => {
-  const { categoryId, serverId } = requestData;
+  const { categoryId, serverId, userId } = requestData;
   await checkServer(serverId);
+  await checkOwner(userId, serverId);
   await checkCategory(categoryId, serverId);
   const lastChannel = await prisma.channel.findFirst({
     where: {
@@ -37,8 +39,9 @@ export const createChannelHandler: CreateChannelType = async (
   });
 };
 export const deleteChannelHandler: DeleteChannelType = async (requestData) => {
-  const { channelId, serverId } = requestData;
+  const { channelId, serverId, userId } = requestData;
   await checkServer(serverId);
+  await checkOwner(userId, serverId);
   await checkChannel(channelId, serverId);
   await prisma.channel.delete({
     where: {
@@ -50,8 +53,9 @@ export const updateChannelHandler: UpdateChannelType = async (
   requestData,
   title
 ) => {
-  const { channelId, serverId } = requestData;
+  const { channelId, serverId, userId } = requestData;
   await checkServer(serverId);
+  await checkOwner(userId, serverId);
   await checkChannel(channelId, serverId);
   return await prisma.channel.update({
     where: {
@@ -76,10 +80,11 @@ export const moveChannelHandler: MoveChannelType = async (
   requestData,
   data
 ) => {
-  const { channelId, serverId } = requestData;
+  const { channelId, serverId, userId } = requestData;
   const { targetCategoryId, targetOrder } = data;
-  const channel = await checkChannel(channelId, serverId);
   await checkServer(serverId);
+  await checkOwner(userId, serverId);
+  const channel = await checkChannel(channelId, serverId);
   await checkCategory(targetCategoryId, serverId);
   if (channel.categoryId === targetCategoryId && targetOrder === undefined) {
     return channel;

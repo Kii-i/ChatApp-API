@@ -5,6 +5,7 @@ type RequestData = {
   serverId: string;
   categoryId: string;
   channelId: string;
+  userId: string;
 };
 export type CreateChannelType = (
   requestData: Omit<RequestData, "channelId">,
