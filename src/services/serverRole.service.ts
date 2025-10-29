@@ -5,6 +5,7 @@ import {
   CreateRoleType,
   DeleteRoleType,
   GetAllRoleType,
+  GetUserRoleType,
 } from "../types/serverRole.types";
 import checkOwner from "../utils/checkOwner";
 import checkRole from "../utils/checkRole";
@@ -39,6 +40,9 @@ export const getAllRoleHandler: GetAllRoleType = async (serverId) => {
   return await prisma.serverRole.findMany({
     where: {
       serverId,
+      title: {
+        not: "OWNER",
+      },
     },
   });
 };
@@ -88,4 +92,24 @@ export const assignRoleHandler: AssignRoleType = async (requestData) => {
     });
     return "Role assigned";
   }
+};
+export const getUserRolesHandler: GetUserRoleType = async (requestData) => {
+  const { serverId, userId } = requestData;
+  await checkUser({ id: userId });
+  await checkServer(serverId);
+  const userRolesOnServer = await prisma.userRolesOnServer.findMany({
+    where: {
+      userId,
+      serverId,
+    },
+    include: {
+      serverRole: {
+        select: {
+          id: true,
+          title: true,
+        },
+      },
+    },
+  });
+  return userRolesOnServer.map((userRole) => userRole.serverRole);
 };

@@ -12,3 +12,6 @@ export type CreateRoleType = (
 export type DeleteRoleType = (requestData: RequestData) => Promise<ServerRole>;
 export type GetAllRoleType = (serverId: string) => Promise<ServerRole[]>;
 export type AssignRoleType = (requestData: RequestData) => Promise<string>;
+export type GetUserRoleType = (
+  requestData: Omit<RequestData, "roleId">
+) => Promise<Pick<ServerRole, "id" | "title">[]>;
